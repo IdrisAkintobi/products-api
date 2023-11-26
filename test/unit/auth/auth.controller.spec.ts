@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { AuthController } from '../../../src/application/auth/auth.controller';
 import { AuthService } from '../../../src/application/auth/auth.service';
+import { HttpResponseMapper } from '../../../src/resources/http-response-mapper';
 import { UserBuilder } from '../../builders/user.builder';
 import { mockAuthService } from '../../mocks/auth.service.mock';
 import { mockLogger } from '../../mocks/logger.mock';
@@ -32,20 +33,22 @@ describe('AuthController', () => {
 
     it('should login a user', async () => {
         const { email, password } = userData;
-        mockAuthService.login.mockResolvedValue('testToken');
+        const testToken = 'testToken';
+        mockAuthService.login.mockResolvedValue({ testToken });
 
         const result = await authController.login({ email, password });
 
         expect(authService.login).toHaveBeenCalledWith({ email, password });
-        expect(result).toEqual('testToken');
+        expect(result).toEqual(HttpResponseMapper.map({ testToken }));
     });
 
     it('should register a user', async () => {
-        mockAuthService.register.mockResolvedValue('testToken');
+        const testToken = 'testToken';
+        mockAuthService.register.mockResolvedValue({ testToken });
 
         const result = await authController.register(userData);
 
         expect(authService.register).toHaveBeenCalledWith(userData);
-        expect(result).toEqual('testToken');
+        expect(result).toEqual(HttpResponseMapper.map({ testToken }));
     });
 });

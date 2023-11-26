@@ -3,6 +3,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ProductController } from '../../../src/application/products/product.controller';
 import { ProductService } from '../../../src/application/products/product.service';
 import { AuthGuard } from '../../../src/guards/auth.guard';
+import { HttpResponseMapper } from '../../../src/resources/http-response-mapper';
 import { ProductBuilder } from '../../builders/product.builder';
 import { mockLogger } from '../../mocks/logger.mock';
 import { mockProductService } from '../../mocks/product.service.mock';
@@ -44,7 +45,7 @@ describe('ProductController', () => {
         const expected = await controller.findById(mockProduct.id);
         expect(productService.findById).toHaveBeenCalledWith(mockProduct.id);
         expect(productService.findById).toHaveBeenCalledTimes(1);
-        expect(expected).toEqual(mockProduct);
+        expect(expected).toEqual(HttpResponseMapper.map(mockProduct));
     });
 
     it('should call productService.update with correct parameters and return the result', async () => {
@@ -52,7 +53,7 @@ describe('ProductController', () => {
         const expected = await controller.update(mockProduct.id, mockProduct);
         expect(productService.update).toHaveBeenCalledWith(mockProduct.id, mockProduct);
         expect(productService.update).toHaveBeenCalledTimes(1);
-        expect(expected).toEqual(mockProduct);
+        expect(expected).toEqual(HttpResponseMapper.map(mockProduct));
     });
 
     it('should call productService.delete with correct parameters', async () => {
@@ -66,7 +67,7 @@ describe('ProductController', () => {
         const expected = await controller.findByName(mockProduct.name);
         expect(productService.findByName).toHaveBeenCalledWith(mockProduct.name);
         expect(productService.findByName).toHaveBeenCalledTimes(1);
-        expect(expected).toEqual(mockProduct);
+        expect(expected).toEqual(HttpResponseMapper.map(mockProduct));
     });
 
     it('should call productService.findByCategory with correct parameters and return the result', async () => {
@@ -80,7 +81,7 @@ describe('ProductController', () => {
             limit,
         );
         expect(productService.findByCategory).toHaveBeenCalledTimes(1);
-        expect(expected).toEqual([mockProduct]);
+        expect(expected).toEqual(HttpResponseMapper.map([mockProduct]));
     });
 
     it('should call productService.findByBrand with correct parameters and return the result', async () => {
@@ -90,6 +91,6 @@ describe('ProductController', () => {
         const expected = await controller.findByBrand(mockProduct.brand, { page, limit });
         expect(productService.findByBrand).toHaveBeenCalledWith(mockProduct.brand, page, limit);
         expect(productService.findByBrand).toHaveBeenCalledTimes(1);
-        expect(expected).toEqual([mockProduct]);
+        expect(expected).toEqual(HttpResponseMapper.map([mockProduct]));
     });
 });

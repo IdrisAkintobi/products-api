@@ -61,6 +61,6 @@ describe('AuthService', () => {
 
         expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(email);
         expect(mockJwtService.sign).toHaveBeenCalledWith({ sub: userData.id });
-        expect(result).toEqual({ access_token: 'token' });
+        expect(result).toEqual({ accessToken: 'token' });
     });
 });
