@@ -85,28 +85,19 @@ export class ErrorExceptionFilter implements ExceptionFilter {
                 await response.status(err.getStatus()).send(httpResponse);
                 break;
             }
-            case err instanceof InternalServerErrorException: {
-                this.logger.error(JSON.stringify(logData));
-                await response
-                    .status(500)
-                    .send({ message: 'Internal server error', statusCode: 500 });
-                break;
-            }
             default: {
-                this.logger.debug(JSON.stringify(logData));
+                this.logger.error(JSON.stringify(logData));
                 const httpErrors: HttpError[] = [
                     {
-                        errorCode: '400',
-                        errorMessage: err.message,
+                        errorCode: '500',
+                        errorMessage: 'Internal server error',
                     },
                 ];
-
                 const httpResponse: HttpResponse<never> = {
                     success: false,
                     errors: httpErrors,
                 };
-
-                await response.status(400).send(httpResponse);
+                await response.status(500).send(httpResponse);
             }
         }
     }
