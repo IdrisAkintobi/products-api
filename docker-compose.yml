@@ -7,6 +7,11 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: password
+        volumes:
+            - ./data:/data/db
+        command: mongod --quiet --logpath /dev/null
+        networks:
+            - products-api-network
 
     products-api:
         build:
@@ -17,4 +22,14 @@ services:
             - mongodb
         environment:
             MONGO_URI: mongodb://mongodb:27017/products-api-db
-            JWT_SECRET: your-secret-key
+        env_file:
+            - .env
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        networks:
+            - products-api-network
+
+networks:
+    products-api-network:
+        driver: bridge
