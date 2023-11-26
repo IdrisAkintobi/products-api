@@ -13,13 +13,14 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { ProductCategoryEnum } from 'src/types/product.category.enum';
 import { Product } from '../../db/schemas/product.schema';
 import { ErrorExceptionFilter } from '../../exception/filters/error-exception-filter';
 import { AuthGuard } from '../../guards/auth.guard';
 import { HttpResponse } from '../../resources/http-response';
 import { HttpResponseMapper } from '../../resources/http-response-mapper';
+import { ProductCategoryEnum } from '../../types/product.category.enum';
 import { CreateProductDto } from './dto/product.create.dto';
+import { ProductFindDto } from './dto/product.find.dto';
 import { ProductPaginationDto } from './dto/product.pagination.dto';
 import { UpdateProductDto } from './dto/product.update.dto';
 import { ProductService } from './product.service';
@@ -54,7 +55,7 @@ export class ProductController {
     @ApiParam({ name: 'id', description: 'Product id' })
     @HttpCode(HttpStatus.OK)
     @Get('/product/:id')
-    async findById(@Param('id') id: string): Promise<HttpResponse<Product>> {
+    async findById(@Param() { id }: ProductFindDto): Promise<HttpResponse<Product>> {
         const response = await this.productService.findById(id);
         return HttpResponseMapper.map(response);
     }
@@ -64,7 +65,7 @@ export class ProductController {
     @HttpCode(HttpStatus.OK)
     @Put('/update/:id')
     async update(
-        @Param('id') id: string,
+        @Param() { id }: ProductFindDto,
         @Body() product: UpdateProductDto,
     ): Promise<HttpResponse<Product>> {
         const response = await this.productService.update(id, product);
@@ -74,7 +75,7 @@ export class ProductController {
     @ApiParam({ name: 'id', description: 'Product id' })
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete('/delete/:id')
-    async delete(@Param('id') id: string): Promise<void> {
+    async delete(@Param() { id }: ProductFindDto): Promise<void> {
         await this.productService.delete(id);
     }
 
