@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/commo
 import { JwtService } from '@nestjs/jwt';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-import { ConfigurationService } from '../utils/config.service';
+import { ConfigurationService } from '../utils/config/config.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

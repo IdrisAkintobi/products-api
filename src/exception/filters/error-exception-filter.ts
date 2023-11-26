@@ -11,8 +11,8 @@ import { MongoServerError } from 'mongodb';
 
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { HttpError } from '../../resources/http-error';
-import { HttpResponse } from '../../resources/http-response';
+import { HttpError } from '../../utils/resources/http-error';
+import { HttpResponse } from '../../utils/resources/http-response';
 
 @Catch()
 export class ErrorExceptionFilter implements ExceptionFilter {

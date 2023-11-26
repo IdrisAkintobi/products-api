@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { JwtConfigType, MongoConfigType } from 'src/types/config.schema.type';
+import { JwtConfigType, MongoConfigType } from '../../types/config.schema.type';
+import { ZodErrorParser } from '../resources/zod.error.parser';
 import { jwtConfigSchema, mongoConfigSchema } from './config-schema';
-import { ZodErrorParser } from './zod.error.parser';
 
 const getMongoConfigFromEnv = (env: NodeJS.ProcessEnv) => {
     try {

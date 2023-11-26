@@ -13,8 +13,8 @@ import { ApiBearerAuth, ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { User } from '../../db/schemas/user.schema';
 import { ErrorExceptionFilter } from '../../exception/filters/error-exception-filter';
 import { AuthGuard } from '../../guards/auth.guard';
-import { HttpResponse } from '../../resources/http-response';
-import { HttpResponseMapper } from '../../resources/http-response-mapper';
+import { HttpResponse } from '../../utils/resources/http-response';
+import { HttpResponseMapper } from '../../utils/resources/http-response-mapper';
 import { UpdateUserDto } from './dto/user.update.dto';
 import { UserService } from './user.service';
 

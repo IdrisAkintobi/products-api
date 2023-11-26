@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UseFilters } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ErrorExceptionFilter } from '../../exception/filters/error-exception-filter';
-import { HttpResponseMapper } from '../../resources/http-response-mapper';
+import { HttpResponseMapper } from '../../utils/resources/http-response-mapper';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';

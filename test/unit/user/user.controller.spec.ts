@@ -3,7 +3,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { UserController } from '../../../src/application/user/user.controller';
 import { UserService } from '../../../src/application/user/user.service';
 import { AuthGuard } from '../../../src/guards/auth.guard';
-import { HttpResponseMapper } from '../../../src/resources/http-response-mapper';
+import { HttpResponseMapper } from '../../../src/utils/resources/http-response-mapper';
 import { UserBuilder } from '../../builders/user.builder';
 import { mockConfigService } from '../../mocks/configuration.service.mock';
 import { mockLogger } from '../../mocks/logger.mock';

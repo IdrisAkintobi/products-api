@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { AuthController } from '../../../src/application/auth/auth.controller';
 import { AuthService } from '../../../src/application/auth/auth.service';
-import { HttpResponseMapper } from '../../../src/resources/http-response-mapper';
+import { HttpResponseMapper } from '../../../src/utils/resources/http-response-mapper';
 import { UserBuilder } from '../../builders/user.builder';
 import { mockAuthService } from '../../mocks/auth.service.mock';
 import { mockLogger } from '../../mocks/logger.mock';

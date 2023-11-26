@@ -3,7 +3,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ProductController } from '../../../src/application/products/product.controller';
 import { ProductService } from '../../../src/application/products/product.service';
 import { AuthGuard } from '../../../src/guards/auth.guard';
-import { HttpResponseMapper } from '../../../src/resources/http-response-mapper';
+import { HttpResponseMapper } from '../../../src/utils/resources/http-response-mapper';
 import { ProductBuilder } from '../../builders/product.builder';
 import { mockLogger } from '../../mocks/logger.mock';
 import { mockProductService } from '../../mocks/product.service.mock';
@@ -42,7 +42,7 @@ describe('ProductController', () => {
 
     it('should call service.findById with correct parameters and return the result', async () => {
         mockProductService.findById.mockResolvedValue(mockProduct);
-        const expected = await controller.findById(mockProduct.id);
+        const expected = await controller.findById({ id: mockProduct.id });
         expect(productService.findById).toHaveBeenCalledWith(mockProduct.id);
         expect(productService.findById).toHaveBeenCalledTimes(1);
         expect(expected).toEqual(HttpResponseMapper.map(mockProduct));
@@ -50,14 +50,14 @@ describe('ProductController', () => {
 
     it('should call productService.update with correct parameters and return the result', async () => {
         mockProductService.update.mockResolvedValue(mockProduct);
-        const expected = await controller.update(mockProduct.id, mockProduct);
+        const expected = await controller.update({ id: mockProduct.id }, mockProduct);
         expect(productService.update).toHaveBeenCalledWith(mockProduct.id, mockProduct);
         expect(productService.update).toHaveBeenCalledTimes(1);
         expect(expected).toEqual(HttpResponseMapper.map(mockProduct));
     });
 
     it('should call productService.delete with correct parameters', async () => {
-        await controller.delete(mockProduct.id);
+        await controller.delete({ id: mockProduct.id });
         expect(productService.delete).toHaveBeenCalledWith(mockProduct.id);
         expect(productService.delete).toHaveBeenCalledTimes(1);
     });

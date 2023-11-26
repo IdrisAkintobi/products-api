@@ -16,9 +16,9 @@ import { ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swa
 import { Product } from '../../db/schemas/product.schema';
 import { ErrorExceptionFilter } from '../../exception/filters/error-exception-filter';
 import { AuthGuard } from '../../guards/auth.guard';
-import { HttpResponse } from '../../resources/http-response';
-import { HttpResponseMapper } from '../../resources/http-response-mapper';
 import { ProductCategoryEnum } from '../../types/product.category.enum';
+import { HttpResponse } from '../../utils/resources/http-response';
+import { HttpResponseMapper } from '../../utils/resources/http-response-mapper';
 import { CreateProductDto } from './dto/product.create.dto';
 import { ProductFindDto } from './dto/product.find.dto';
 import { ProductPaginationDto } from './dto/product.pagination.dto';
