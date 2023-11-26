@@ -1,13 +1,26 @@
-FROM node:20-alpine
+FROM node:20-alpine as build
 
-WORKDIR /usr/src/app
+# create user
+RUN addgroup --system server
+RUN adduser --system --ingroup server nodejs
+USER nodejs
 
-COPY package*.json ./
+# install dependencies
+WORKDIR /app
+COPY --chown=nodejs:server package.json package-lock.json .eslintrc ./
+RUN npm ci
 
-RUN npm install
+# build app
+COPY --chown=nodejs:server tsconfig.json tsconfig.build.json .prettierrc .eslintrc .env ./
+COPY --chown=nodejs:server src/ src/
+RUN npm run build
 
-COPY . .
+# copy dist and start app
+FROM build
+WORKDIR /app
+COPY --chown=nodejs:server --from=build app/ ./
 
+USER nodejs
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD [ "npm", "start" ]
