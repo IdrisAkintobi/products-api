@@ -1,24 +1,26 @@
-FROM node:20-alpine as build
+FROM node:20 as build
 
 # create user
 RUN addgroup --system server
 RUN adduser --system --ingroup server nodejs
-USER nodejs
 
 # install dependencies
 WORKDIR /app
-COPY --chown=nodejs:server package.json package-lock.json .eslintrc ./
+ENV NODE_ENV=production
+COPY --chown=nodejs:server package.json package-lock.json ./
 RUN npm ci
 
 # build app
-COPY --chown=nodejs:server tsconfig.json tsconfig.build.json .prettierrc .eslintrc .env ./
+COPY --chown=nodejs:server tsconfig.json tsconfig.build.json .prettierrc .eslintrc ./
 COPY --chown=nodejs:server src/ src/
 RUN npm run build
+RUN rm -rf src
 
 # copy dist and start app
 FROM build
 WORKDIR /app
-COPY --chown=nodejs:server --from=build app/dist app/node_modules app/.env ./
+COPY --chown=nodejs:server .env ./
+COPY --chown=nodejs:server --from=build app/ .
 
 USER nodejs
 
