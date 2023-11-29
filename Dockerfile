@@ -18,9 +18,8 @@ RUN npm run build
 # copy dist and start app
 FROM build
 WORKDIR /app
-COPY --chown=nodejs:server --from=build app/ ./
+COPY --chown=nodejs:server --from=build app/dist app/node_modules app/.env ./
 
 USER nodejs
-EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD [ "node", "dist/main.js" ]

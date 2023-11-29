@@ -16,6 +16,10 @@ lerna-debug.log*
 
 # Environments
 .env
+docker-compose.env
+
+# eslint cache
+.eslintcache
 
 # Tests
 /coverage
