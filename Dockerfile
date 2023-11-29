@@ -23,6 +23,5 @@ WORKDIR /app
 COPY --chown=nodejs:server --from=build app/ .
 
 USER nodejs
-EXPOSE 3003
 
 CMD [ "node", "dist/main.js" ]

@@ -9,6 +9,7 @@ export const setupOpenApi = app => {
         .addTag('product')
         .addBearerAuth()
         .addServer('http://localhost:3000', 'Local server')
+        .addServer('https://products-api-cloud.onrender.com', 'Cloud server')
         .build();
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup('api', app, document);
