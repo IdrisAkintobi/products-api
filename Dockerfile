@@ -1,27 +1,28 @@
 FROM node:20 as build
 
-# create user
-RUN addgroup --system server
-RUN adduser --system --ingroup server nodejs
-
 # install dependencies
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --chown=nodejs:server package.json package-lock.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
 # build app
-COPY --chown=nodejs:server tsconfig.json tsconfig.build.json .prettierrc .eslintrc ./
-COPY --chown=nodejs:server src/ src/
+COPY tsconfig.json tsconfig.build.json .prettierrc .eslintrc .env ./
+COPY src/ src/
 RUN npm run build
 RUN rm -rf src
 
 # copy dist and start app
-FROM build
+FROM node:20 as app
+
+# create user
+RUN addgroup --system server
+RUN adduser --system --ingroup server nodejs
+
 WORKDIR /app
-COPY --chown=nodejs:server .env ./
 COPY --chown=nodejs:server --from=build app/ .
 
 USER nodejs
+EXPOSE 3003
 
 CMD [ "node", "dist/main.js" ]
