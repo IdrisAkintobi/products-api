@@ -1,4 +1,10 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    Inject,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as argon from 'argon2';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
@@ -19,7 +25,7 @@ export class AuthService {
     async register(userData: RegisterDto) {
         const user = await this.userRepository.findByEmail(userData.email);
         if (user) {
-            throw new BadRequestException('User already exists');
+            throw new ConflictException('User already exists');
         }
         const hashedPassword = await this.hashPassword(userData.password);
         userData.password = hashedPassword;
@@ -32,7 +38,7 @@ export class AuthService {
     async login(credentials: LoginDto) {
         const user = await this.userRepository.findByEmail(credentials.email);
         if (!user) {
-            throw new BadRequestException('User not found');
+            throw new NotFoundException('User not found');
         }
         const isPasswordValid = await this.comparePassword(credentials.password, user.password);
         if (!isPasswordValid) {

@@ -2,9 +2,11 @@ import {
     ArgumentsHost,
     BadRequestException,
     Catch,
+    ConflictException,
     ExceptionFilter,
     Inject,
     InternalServerErrorException,
+    NotFoundException,
 } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { MongoServerError } from 'mongodb';
@@ -54,28 +56,8 @@ export class ErrorExceptionFilter implements ExceptionFilter {
             case err instanceof BadRequestException: {
                 this.logger.info(JSON.stringify(logData));
                 const errorResponse = err.getResponse();
-                const httpErrors: HttpError[] = [];
-                if (typeof errorResponse === 'string') {
-                    httpErrors.push({
-                        errorCode: '400',
-                        errorMessage: errorResponse,
-                    });
-                } else if (typeof errorResponse === 'object' && 'message' in errorResponse) {
-                    const requestErrors = errorResponse as { message: string | string[] };
-                    if (Array.isArray(requestErrors.message)) {
-                        requestErrors.message.forEach(message => {
-                            httpErrors.push({
-                                errorCode: '400',
-                                errorMessage: message,
-                            });
-                        });
-                    } else {
-                        httpErrors.push({
-                            errorCode: '400',
-                            errorMessage: requestErrors.message,
-                        });
-                    }
-                }
+                const errorCode = err.getStatus();
+                const httpErrors = this.getHttpErrorResponse(errorResponse, errorCode);
 
                 const httpResponse: HttpResponse<never> = {
                     success: false,
@@ -83,6 +65,19 @@ export class ErrorExceptionFilter implements ExceptionFilter {
                 };
 
                 await response.status(err.getStatus()).send(httpResponse);
+                break;
+            }
+            case err instanceof ConflictException || err instanceof NotFoundException: {
+                this.logger.info(JSON.stringify(logData));
+                const errorResponse = err.getResponse();
+                const errorCode = err.getStatus();
+                const httpErrors = this.getHttpErrorResponse(errorResponse, errorCode);
+                const httpResponse: HttpResponse<never> = {
+                    success: false,
+                    errors: httpErrors,
+                };
+
+                await response.status(+errorCode).send(httpResponse);
                 break;
             }
             default: {
@@ -100,5 +95,31 @@ export class ErrorExceptionFilter implements ExceptionFilter {
                 await response.status(500).send(httpResponse);
             }
         }
+    }
+
+    private getHttpErrorResponse(errorResponse: string | object, errorCode: number) {
+        const httpErrors: HttpError[] = [];
+        if (typeof errorResponse === 'string') {
+            httpErrors.push({
+                errorCode: errorCode.toString(),
+                errorMessage: errorResponse,
+            });
+        } else if (typeof errorResponse === 'object' && 'message' in errorResponse) {
+            const requestErrors = errorResponse as { message: string | string[] };
+            if (Array.isArray(requestErrors.message)) {
+                requestErrors.message.forEach(message => {
+                    httpErrors.push({
+                        errorCode: errorCode.toString(),
+                        errorMessage: message,
+                    });
+                });
+            } else {
+                httpErrors.push({
+                    errorCode: errorCode.toString(),
+                    errorMessage: requestErrors.message,
+                });
+            }
+        }
+        return httpErrors;
     }
 }

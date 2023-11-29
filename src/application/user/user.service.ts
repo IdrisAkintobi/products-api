@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '../../db/repository/user.repository';
 import { User } from '../../db/schemas/user.schema';
 import { UpdateUserDto } from './dto/user.update.dto';
@@ -10,7 +10,7 @@ export class UserService {
     async update(id: string, user: UpdateUserDto): Promise<User> {
         const updatedUser = await this.userRepository.updateUser(id, user);
         if (!updatedUser) {
-            throw new BadRequestException('User not found');
+            throw new NotFoundException('User not found');
         }
         return updatedUser.toObject();
     }
@@ -18,7 +18,7 @@ export class UserService {
     async delete(id: string): Promise<void> {
         const deletedUser = await this.userRepository.deleteUser(id);
         if (!deletedUser) {
-            throw new BadRequestException('User not found');
+            throw new NotFoundException('User not found');
         }
     }
 }

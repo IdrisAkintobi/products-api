@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductCategoryEnum } from 'src/types/product.category.enum';
 import { ProductRepository } from '../../db/repository/product.repository';
 import { Product } from '../../db/schemas/product.schema';
@@ -22,7 +22,7 @@ export class ProductService {
     async findById(id: string): Promise<Product> {
         const product = await this.productRepository.findProductById(id);
         if (!product) {
-            throw new BadRequestException('Product not found');
+            throw new NotFoundException('Product not found');
         }
         return product.toObject();
     }
@@ -30,7 +30,7 @@ export class ProductService {
     async update(id: string, product: UpdateProductDto): Promise<Product> {
         const updatedProduct = await this.productRepository.updateProduct(id, product);
         if (!updatedProduct) {
-            throw new BadRequestException('Product not found');
+            throw new NotFoundException('Product not found');
         }
         return updatedProduct.toObject();
     }
@@ -38,14 +38,14 @@ export class ProductService {
     async delete(id: string): Promise<void> {
         const deletedProduct = await this.productRepository.deleteProduct(id);
         if (!deletedProduct) {
-            throw new BadRequestException('Product not found');
+            throw new NotFoundException('Product not found');
         }
     }
 
     async findByName(name: string): Promise<Product> {
         const product = await this.productRepository.findProductByName(name);
         if (!product) {
-            throw new BadRequestException('Product not found');
+            throw new NotFoundException('Product not found');
         }
         return product.toObject();
     }

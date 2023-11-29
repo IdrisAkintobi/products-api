@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import {
+    IsEnum,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
+    IsUrl,
+    Max,
+    Min,
+} from 'class-validator';
 
 import { ProductCategoryEnum } from '../../../types/product.category.enum';
 
@@ -73,7 +82,7 @@ export class CreateProductDto {
         example: 'https://example.com/image.png',
         required: false,
     })
-    @IsString()
+    @IsUrl()
     @IsOptional()
     readonly image?: string;
 }
