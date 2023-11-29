@@ -17,7 +17,7 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe({ transform: true, validateCustomDecorators: true }));
     setupOpenApi(app);
 
-    await app.listen(port);
+    await app.listen(port, '0.0.0.0');
     console.log(`🚀 Server is running on: ${await app.getUrl()}`);
 }
 bootstrap();
