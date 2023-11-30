@@ -53,21 +53,9 @@ export class ErrorExceptionFilter implements ExceptionFilter {
                 await response.status(409).send(httpResponse);
                 break;
             }
-            case err instanceof BadRequestException: {
-                this.logger.info(JSON.stringify(logData));
-                const errorResponse = err.getResponse();
-                const errorCode = err.getStatus();
-                const httpErrors = this.getHttpErrorResponse(errorResponse, errorCode);
-
-                const httpResponse: HttpResponse<never> = {
-                    success: false,
-                    errors: httpErrors,
-                };
-
-                await response.status(err.getStatus()).send(httpResponse);
-                break;
-            }
-            case err instanceof ConflictException || err instanceof NotFoundException: {
+            case err instanceof ConflictException ||
+                err instanceof NotFoundException ||
+                err instanceof BadRequestException: {
                 this.logger.info(JSON.stringify(logData));
                 const errorResponse = err.getResponse();
                 const errorCode = err.getStatus();
