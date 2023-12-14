@@ -1,6 +1,9 @@
-FROM node:20 as build
+FROM node:20-alpine as base
+RUN apk add --no-cache libc6-compat
+RUN apk update
 
 # install dependencies
+FROM base as build
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package.json package-lock.json ./
@@ -10,17 +13,18 @@ RUN npm ci
 COPY tsconfig.json tsconfig.build.json .prettierrc .eslintrc ./
 COPY src/ src/
 RUN npm run build
-RUN rm -rf src
 
 # copy dist and start app
-FROM node:20 as app
+FROM base as app
 
 # create user
-RUN addgroup --system server
-RUN adduser --system --ingroup server nodejs
+RUN addgroup --system --gid 1001 server
+RUN adduser --system --uid 1001 --ingroup server nodejs
 
 WORKDIR /app
-COPY --chown=nodejs:server --from=build app/ .
+COPY --chown=nodejs:server --from=build app/dist ./dist
+COPY --chown=nodejs:server --from=build app/node_modules ./node_modules
+COPY --chown=nodejs:server --from=build app/package.json ./package.json
 
 USER nodejs
 
