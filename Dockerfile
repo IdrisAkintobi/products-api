@@ -24,7 +24,6 @@ RUN adduser --system --uid 1001 --ingroup server nodejs
 WORKDIR /app
 COPY --chown=nodejs:server --from=build app/dist ./dist
 COPY --chown=nodejs:server --from=build app/node_modules ./node_modules
-COPY --chown=nodejs:server --from=build app/package.json ./package.json
 
 USER nodejs
 
